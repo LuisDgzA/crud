@@ -179,7 +179,7 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$(document).on("submit","#formPT",function(e){
+	$(document).on("submit","#formPT", async function(e){
 		e.preventDefault();
 		let parametros = $(this).serializeArray();
 
@@ -219,8 +219,17 @@ $(document).ready(function() {
 			allAnalisis
 		}
 		console.log("datos",datos)
-		console.log("parametros",parametros)
-		console.log(JSON.parse(JSON.stringify(parametros)))
+
+		let res = await fetch("./recib.php", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(datos),
+		})
+
+		// console.log("parametros",parametros)
+		// console.log(JSON.parse(JSON.stringify(parametros)))
 		// alert("xd")
 	})
 	// $( "#formPT" ).submit(function( event ) {
