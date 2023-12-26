@@ -10,7 +10,19 @@
 	if (isset($rws['last'])){
 		$numero=$rws['last']+1;
 	} 
-	
+	$data_select = "";
+	include("../conexion.php");
+	$query_rol = mysqli_query($conexion, "SELECT * FROM analisis");
+	mysqli_close($conexion);
+	$resultado_rol = mysqli_num_rows($query_rol);
+	if ($resultado_rol > 0) {
+		while ($rol = mysqli_fetch_array($query_rol)) {									
+			$data_select .= "<option value=".$rol['id_analisis'].">".$rol["nombre_a"]."</option>";					
+
+		}
+	}
+								// var_dump($data_select);
+							
 ?>
 <html>
 <head>
@@ -39,34 +51,34 @@
             </div>
         
 			
-<form action="recib.php" method="POST">
-			<div class="row ">
-				<hr />
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <h2>Detalles del PT :</h2>
-                     <select class="proveedor form-control" name="proveedor" id="proveedor" required>
-						<option value="">Selecciona el PT</option>
-					</select>
-                    <span id="direccion"></span>
-                    <h4><strong>PT: </strong><span id="email"></span></h4>
-                    <h4><strong>Descripción: </strong><span id="telefono"></span></h4>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <h2></h2>					
-					<div class="row">
-						<div class="col-lg-6">
-						<label>Caducidad</label>
-						<input type="date" name="condiciones" id="condiciones" class="form-control">
-						</div>
-						
-						<div class="col-lg-6">
-						<label>Empaque</label>
-						<input type="text" name="envio" id="envio" class="form-control">
-						</div>
-						
-					</div>                  
-                </div>
-            </div>
+<form id="formPT" method="POST">
+	<div class="row ">
+		<hr />
+		<div class="col-lg-6 col-md-6 col-sm-6">
+			<h2>Detalles del PT :</h2>
+				<select class="proveedor form-control" name="proveedor" id="proveedor" required>
+				<option value="">Selecciona el PT</option>
+			</select>
+			<span id="direccion"></span>
+			<h4><strong>PT: </strong><span id="email"></span></h4>
+			<h4><strong>Descripción: </strong><span id="telefono"></span></h4>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-6">
+			<h2></h2>					
+			<div class="row">
+				<div class="col-lg-6">
+				<label>Caducidad</label>
+				<input type="date" name="condiciones" id="condiciones" class="form-control">
+				</div>
+				
+				<div class="col-lg-6">
+				<label>Empaque</label>
+				<input type="text" name="envio" id="envio" class="form-control">
+				</div>
+				
+			</div>                  
+		</div>
+	</div>
 	<div class="row text-right">
 		<div class="col-md-12">
 			<button class="btn add-btn btn-info">+</button>
@@ -74,42 +86,32 @@
 	</div>
 
 	<div class="form-row">
-	<div class="col-md-4">
-		<label>Análisis</label>
-		<select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]" >
-							<?php 
-							include("../conexion.php");
-							$query_rol = mysqli_query($conexion, "SELECT * FROM analisis");
-							mysqli_close($conexion);
-							$resultado_rol = mysqli_num_rows($query_rol);
-							if ($resultado_rol > 0) {
-								while ($rol = mysqli_fetch_array($query_rol)) {
+		<div class="col-md-4">
+			<label>Análisis</label>
+			<select class="form-control select2 select2-danger select-analisis" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]" >
+								<?php 
+								echo($data_select);
+								
 							?>
-									<option value="<?php echo $rol["id_analisis"]; ?>"><?php echo $rol["nombre_a"]  ?></option>
-							<?php
+			</select> 
+		</div>
 
-								}
-							}
-						?>
-		</select> 
-	</div>
+		<div class="col-md-4">
+			<label>Mínimo</label>
+			<input type="number" name="min[]" class="form-control inp-min">
+		</div>
 
-	<div class="col-md-4">
-		<label>Mínimo</label>
-		<input type="number" name="min" class="form-control">
-	</div>
-
-	<div class="col-md-4">
-		<label>Máximo</label>
-			<input type="number" name="max" class="form-control">
-	</div>
+		<div class="col-md-4">
+			<label>Máximo</label>
+			<input type="number" name="max[]" class="form-control inp-max">
+		</div>
 	</div>
 
 	<div class="newData"></div>
 	<div class="row text-center mt-5">
-	<div class="col-md-12">
-	<input type="submit" class="btn btn-primary" value="Registrar"/>
-	</div>
+		<div class="col-md-12">
+			<input type="submit" class="btn btn-primary" value="Registrar"/>
+		</div>
 	</div>
 	<br>
 </form>
@@ -177,24 +179,68 @@ $(document).ready(function() {
 			}
 		});
 	}
-	
-	$( "#guardar_item" ).submit(function( event ) {
-		parametros = $(this).serialize();
-		$.ajax({
-			type: "POST",
-			url:'ajax/items.php',
-			data: parametros,
-			 beforeSend: function(objeto){
-				 $('.items').html('Cargando...');
-			  },
-			success:function(data){
-				$(".items").html(data).fadeIn('slow');
-				$("#myModal").modal('hide');
+	$(document).on("submit","#formPT",function(e){
+		e.preventDefault();
+		let parametros = $(this).serializeArray();
+
+		let proveedor = document.getElementById("proveedor").value
+		,condiciones = document.getElementById("condiciones").value
+		,envio = document.getElementById("envio").value
+		,totalRows = document.querySelectorAll('.select-analisis')
+		,selectAnalisis = document.querySelectorAll('.select-analisis')
+		,minValues = document.querySelectorAll('.inp-min')
+		,maxValues = document.querySelectorAll('.inp-max')
+		,analisisArray = []
+		,minValuesArray = []
+		,maxValuesArray = [],
+		allAnalisis = []
+
+
+		totalRows.forEach((row,index) => {
+			allAnalisis[index] = {
+				id_analisis: selectAnalisis[index].value,
+				minValue: minValues[index].value,
+				maxValue: maxValues[index].value
 			}
+			// analisisArray.push(selectAnalisis[index])
+			
+			
+
+
 		})
+
 		
-	  event.preventDefault();
+
+
+		let datos = {
+			proveedor,
+			condiciones,
+			envio,
+			allAnalisis
+		}
+		console.log("datos",datos)
+		console.log("parametros",parametros)
+		console.log(JSON.parse(JSON.stringify(parametros)))
+		// alert("xd")
 	})
+	// $( "#formPT" ).submit(function( event ) {
+	// 	event.preventDefault();
+	// 	parametros = $(this).serialize();
+	// 	console.log("parametros",parametros)
+	// 	// $.ajax({
+	// 	// 	type: "POST",
+	// 	// 	url:'ajax/items.php',
+	// 	// 	data: parametros,
+	// 	// 	 beforeSend: function(objeto){
+	// 	// 		 $('.items').html('Cargando...');
+	// 	// 	  },
+	// 	// 	success:function(data){
+	// 	// 		$(".items").html(data).fadeIn('slow');
+	// 	// 		$("#myModal").modal('hide');
+	// 	// 	}
+	// 	// })
+		
+	// })
 	$("#datos_presupuesto").submit(function(){
 		  var proveedor = $("#proveedor").val();
 		  var condiciones = $("#condiciones").val();
@@ -217,30 +263,34 @@ $(document).ready(function() {
 		
 </script>
 	<script type="text/javascript">
-
+		let data_select = "<?= $data_select ?>";
+		console.log(data_select)
 		$(function () { 
 		var i = 1;
 		$('.add-btn').click(function (e) {
 			e.preventDefault();
 			i++;
 
-			$('.newData').append('<div id="newRow'+i+'" class="form-row">'
-				+'<div class="col-md-4">'
-				+'<label>Análisis</label>'
-				+'<select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis" id="id_analisis" >'				
-				+'</select>'
-				+'</div>'
-				+'<div class="col-md-4">'
-				+'<label>Mínimo</label>'
-				+'<input type="number" name="min[]" class="form-control">'
-				+'</div>'
-				+'<div class="col-md-4">'
-				+'<label>Máximo</label>'
-				+'<input type="number" name="max[]" class="form-control">'
-				+'</div>'
-				+'<a href="#" class="remove-lnk" id="'+i+'">Eliminar "'+i+'"</a>'
-				+'</div>'
-			);  
+			$('.newData').append(`
+				<div class="form-row">
+					<div class="col-md-4">
+						<label>Análisis</label>
+						<select class="form-control select2 select2-danger select-analisis" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]" >
+							${data_select}		
+						</select> 
+					</div>
+
+					<div class="col-md-4">
+						<label>Mínimo</label>
+						<input type="number" name="min[]" class="form-control inp-min">
+					</div>
+
+					<div class="col-md-4">
+						<label>Máximo</label>
+						<input type="number" name="max[]" class="form-control inp-max">
+					</div>
+				</div>
+			`);  
 		});
 	
 

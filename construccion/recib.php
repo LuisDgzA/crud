@@ -1,6 +1,6 @@
 <?php
-$usuario        = "sistema";
-$password       = "Trophe.2022";
+$usuario        = "root";
+$password       = "";
 $servidor       = "localhost";
 $basededatos    = "coa";
 $con            = mysqli_connect($servidor, $usuario, $password) or die("No se ha podido conectar al Servidor");
