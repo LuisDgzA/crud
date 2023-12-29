@@ -15,7 +15,8 @@ include 'assets/head.php';
     .analisis-item{
       display: grid;
       grid-template-areas: "nombre-analisis input-resultado"
-                           "valores-analisis input-resultado";
+                           "valores-analisis input-resultado"
+                           "validacion validacion";
 	  grid-template-columns: 1fr 1fr;
 	  justify-items: center;
 	  border-bottom: 1px solid black;
@@ -33,6 +34,9 @@ include 'assets/head.php';
 	.analisis-item__input{
 		grid-area: input-resultado;
 	}
+  .analisis-item__validacion{
+    grid-area: validacion;
+  }
   </style>
 <div class="wrapper">
 
@@ -233,8 +237,9 @@ include 'assets/aside.php';
         $('#id_producto').change(function() {
             let id_value = this.value
             recargarLista(id_value);
+            
         });
-
+        
         let formResultados = document.getElementById("formResultados");
         formResultados.addEventListener("submit", async function(e){
           e.preventDefault();
@@ -272,6 +277,10 @@ include 'assets/aside.php';
 
           let res = await respuestaInsert.json()
           console.log(res)
+		  if(res.success){
+			$("#formResultados")[0].reset();
+			$(".analisis-wrapper").empty();
+		  }
 
 
 
@@ -297,16 +306,18 @@ include 'assets/aside.php';
       response.respuesta.forEach(analisis => {
         analisisWrapper.insertAdjacentHTML("beforeend",
         `<div class="analisis-item">
-        	<div class="analisis-item__name">${analisis.analisis}</div>
-			<div  class="analisis-item__valores">
-				<div>Min. ${analisis.min}</div>
-				<div>Max. ${analisis.max}</div>
-			</div>
-			<div class="analisis-item__input">
-				<label class="form-label" for="">Resultado</label>
-				<input class="form-control input-resultados" type="number" dataIPA="${analisis.id_proveedor_analisis}" required>
-			</div>
-		</div>`)
+              <div class="analisis-item__name">${analisis.analisis}</div>
+          <div  class="analisis-item__valores">
+            <div>Min. <span class="min-val">${analisis.min}</span></div>
+            <div>Max. <span class="max-val">${analisis.max}</span></div>
+          </div>
+          <div class="analisis-item__input">
+            <label class="form-label" for="">Resultado</label>
+            <input class="form-control input-resultados" type="number" dataIPA="${analisis.id_proveedor_analisis}" required>
+          </div>
+          <div class="analisis-item__validacion">
+          </div>
+        </div>`)
       })
       try {
         $.ajax({
@@ -324,6 +335,24 @@ include 'assets/aside.php';
       } catch (error) {
         console.log(error)
       }
+      let inputsResultados = document.querySelectorAll(".input-resultados");
+      console.log("inputsResultados",inputsResultados)
+
+      inputsResultados.forEach(inputResultados => {
+        inputResultados.addEventListener("keyup", function(e){
+          console.log(inputResultados.value)
+          console.log(Number(inputResultados.parentElement.parentElement.querySelector(".analisis-item__valores .min-val").textContent))
+          let minVal = Number(inputResultados.parentElement.parentElement.querySelector(".analisis-item__valores .min-val").textContent)
+          let maxVal = Number(inputResultados.parentElement.parentElement.querySelector(".analisis-item__valores .max-val").textContent)
+          let divValidacion = inputResultados.parentElement.parentElement.querySelector(".analisis-item__validacion")
+          divValidacion.innerHTML = ""
+          if(Number(inputResultados.value) > maxVal || Number(inputResultados.value) < minVal){
+            divValidacion.insertAdjacentHTML("beforeend","Valor fuera de rango");
+          }
+
+
+        })
+      })
     }
 </script>
 <!-- jQuery -->
