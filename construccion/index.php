@@ -41,6 +41,7 @@
     <link href="assets/css/style.css" rel="stylesheet" />
 	<link rel=icon href='http://obedalvarado.pw/img/logo-icon.png' sizes="32x32" type="image/png">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body >
     <div class="container outer-section" >
@@ -68,12 +69,12 @@
 			<div class="row">
 				<div class="col-lg-6">
 				<label>Caducidad</label>
-				<input type="date" name="condiciones" id="condiciones" class="form-control">
+				<input type="date" name="condiciones" id="condiciones" class="form-control" required>
 				</div>
 				
 				<div class="col-lg-6">
 				<label>Empaque</label>
-				<input type="text" name="envio" id="envio" class="form-control">
+				<input type="text" name="envio" id="envio" class="form-control" required>
 				</div>
 				
 			</div>                  
@@ -85,10 +86,10 @@
 		</div>
 	</div>
 
-	<div class="form-row">
+	<div class="row">
 		<div class="col-md-4">
 			<label>Análisis</label>
-			<select class="form-control select2 select2-danger select-analisis" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]" >
+			<select class="form-control select2 select2-danger select-analisis" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]" required>
 								<?php 
 								echo($data_select);
 								
@@ -98,17 +99,17 @@
 
 		<div class="col-md-4">
 			<label>Mínimo</label>
-			<input type="number" name="min[]" class="form-control inp-min">
+			<input type="number" name="min[]" class="form-control inp-min" required>
 		</div>
 
 		<div class="col-md-4">
 			<label>Máximo</label>
-			<input type="number" name="max[]" class="form-control inp-max">
+			<input type="number" name="max[]" class="form-control inp-max" required>
 		</div>
 	</div>
 
 	<div class="newData"></div>
-	<div class="row text-center mt-5">
+	<div class="row text-center mt-5" style="margin-top: 1rem;">
 		<div class="col-md-12">
 			<input type="submit" class="btn btn-primary" value="Registrar"/>
 		</div>
@@ -227,6 +228,24 @@ $(document).ready(function() {
 			},
 			body: JSON.stringify(datos),
 		})
+		let response = await res.json();
+		console.log(response)
+		if(response.success){
+			$("#formPT")[0].reset();
+			Swal.fire({
+				title: "Datos guardados",
+				text: "",
+				icon: "success"
+			}).then((result) => {
+				if (result) {
+					
+					window.location.href = "../micro.php";
+				}
+			});
+		}else{
+			alert("Algo salió mal durante el guardado de datos");
+
+		}
 
 		// console.log("parametros",parametros)
 		// console.log(JSON.parse(JSON.stringify(parametros)))
@@ -271,45 +290,54 @@ $(document).ready(function() {
 		
 		
 </script>
-	<script type="text/javascript">
-		let data_select = "<?= $data_select ?>";
-		console.log(data_select)
-		$(function () { 
-		var i = 1;
-		$('.add-btn').click(function (e) {
-			e.preventDefault();
-			i++;
+<script type="text/javascript">
+	let data_select = "<?= $data_select ?>";
+	console.log(data_select)
+	$(function () { 
+	var i = 1;
+	$('.add-btn').click(function (e) {
+		e.preventDefault();
+		i++;
 
-			$('.newData').append(`
-				<div class="form-row">
-					<div class="col-md-4">
-						<label>Análisis</label>
-						<select class="form-control select2 select2-danger select-analisis" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]" >
-							${data_select}		
-						</select> 
-					</div>
-
-					<div class="col-md-4">
-						<label>Mínimo</label>
-						<input type="number" name="min[]" class="form-control inp-min">
-					</div>
-
-					<div class="col-md-4">
-						<label>Máximo</label>
-						<input type="number" name="max[]" class="form-control inp-max">
-					</div>
+		$('.newData').append(`
+			<div class="row" style="display: flex; align-items: end; margin-top: 1rem;">
+				<div class="col-md-4">
+					<label>Análisis</label>
+					<select class="form-control select2 select2-danger select-analisis" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_analisis[]" id="id_analisis[]"  required>
+						${data_select}		
+					</select> 
 				</div>
-			`);  
-		});
-	
 
-		$(document).on('click', '.remove-lnk', function(e) {
-			e.preventDefault();
+				<div class="col-md-3">
+					<label>Mínimo</label>
+					<input type="number" name="min[]" class="form-control inp-min" required>
+				</div>
 
-			var id = $(this).attr("id");
-			$('#newRow'+id+'').remove();
-			});
-	
+				<div class="col-md-3">
+					<label>Máximo</label>
+					<input type="number" name="max[]" class="form-control inp-max" required>
+				</div>
+
+				<div class="col-md-2">					
+					<button class="btn btn-danger btn-remover">Remover</button>
+				</div>
+			</div>
+		`);  
+	});
+
+	$(document).on("click", ".btn-remover", function(){
+		let row_item = $(this).parent().parent();
+		$(row_item).remove();
+	})
+
+
+	$(document).on('click', '.remove-lnk', function(e) {
+		e.preventDefault();
+
+		var id = $(this).attr("id");
+		$('#newRow'+id+'').remove();
 		});
-	</script>
+
+	});
+</script>
 </html>

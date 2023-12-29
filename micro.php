@@ -7,6 +7,33 @@
 include 'assets/head.php';
 ?>
 <body class="hold-transition sidebar-mini layout-fixed">
+  <style>
+	.analisis-wrapper{
+		display:grid;
+		gap: 0.6rem;
+	}
+    .analisis-item{
+      display: grid;
+      grid-template-areas: "nombre-analisis input-resultado"
+                           "valores-analisis input-resultado";
+	  grid-template-columns: 1fr 1fr;
+	  justify-items: center;
+	  border-bottom: 1px solid black;
+	  padding-bottom: 0.3rem;
+    }
+	.analisis-item__name{
+		grid-area: nombre-analisis;
+	}
+	.analisis-item__valores{
+		grid-area: valores-analisis;
+		display: flex;
+		justify-content: space-around;
+		width: 100%;
+	}
+	.analisis-item__input{
+		grid-area: input-resultado;
+	}
+  </style>
 <div class="wrapper">
 
   <!-- Preloader -->
@@ -130,7 +157,7 @@ include 'assets/aside.php';
               </button>
             </div>
             <div class="modal-body">
-            <form method="POST" action="assets/save.php">
+            <form id="formResultados">
                 <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1000">
                     <div class="mb-3">
                         <label class="form-label" for="exampleFormControlInput1">Lote</label>
@@ -151,7 +178,10 @@ include 'assets/aside.php';
                       ?>
 
                     </select>                   
-                    </div> 
+                    </div>
+                    <div class="analisis-wrapper">
+
+                    </div>
                     <div class="form-group" id="select2lista">
 
                     </div> 
@@ -181,7 +211,7 @@ include 'assets/aside.php';
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="exampleFormControlTextarea1">Comentarios</label>
-                        <input class="form-control" name="com" id="com" placeholder="Comentarios">
+                        <input class="form-control" name="com" id="comentarios" placeholder="Comentarios">
                     </div> 
             </div>
             <div class="modal-footer justify-content-between">
@@ -198,23 +228,102 @@ include 'assets/aside.php';
 <script>
     $(document).ready(function() {
         $('#id_producto').val(0);
-        recargarLista();
+        // recargarLista();
 
         $('#id_producto').change(function() {
-            recargarLista();
+            let id_value = this.value
+            recargarLista(id_value);
         });
+
+        let formResultados = document.getElementById("formResultados");
+        formResultados.addEventListener("submit", async function(e){
+          e.preventDefault();
+          let lote = document.getElementById("lote").value
+          id_producto = document.getElementById("id_producto").value,
+          estatus = document.getElementById("estatus").value,
+          comentarios = document.getElementById("comentarios").value,
+          arregloInputResultados = document.querySelectorAll(".input-resultados"),
+          arregloResultados = []
+
+          arregloInputResultados.forEach(inputResultado => {
+            arregloResultados.push({
+              valorResultado: inputResultado.value,
+              id_proveedor_analisis: inputResultado.getAttribute("dataIPA")
+            })
+          })
+
+          let data = {
+            lote,
+            id_producto,
+            estatus,
+            comentarios,
+            arregloResultados
+          }
+
+          console.log(data)
+
+          let respuestaInsert = await fetch("./assets/save.php",{
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data)
+          })
+
+          let res = await respuestaInsert.json()
+          console.log(res)
+
+
+
+
+        })
     })
 </script>
 <script>
-    function recargarLista() {
+    async function recargarLista(id_pt = 0) {
+
+      let data = {id_pt}
+      let res = await fetch("./getAllAnalisis.php",{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+      })
+      let response = await res.json()
+      console.log("allanalisis",response)
+      let analisisWrapper = document.querySelector(".analisis-wrapper")
+      analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
+      response.respuesta.forEach(analisis => {
+        analisisWrapper.insertAdjacentHTML("beforeend",
+        `<div class="analisis-item">
+        	<div class="analisis-item__name">${analisis.analisis}</div>
+			<div  class="analisis-item__valores">
+				<div>Min. ${analisis.min}</div>
+				<div>Max. ${analisis.max}</div>
+			</div>
+			<div class="analisis-item__input">
+				<label class="form-label" for="">Resultado</label>
+				<input class="form-control input-resultados" type="number" dataIPA="${analisis.id_proveedor_analisis}" required>
+			</div>
+		</div>`)
+      })
+      try {
         $.ajax({
             type: "POST",
             url: "obtener.php",
             data: "telefono=" + $('#id_producto').val(),
             success: function(r) {
                 $('#select2lista').html(r);
+            },
+            error: function(e){
+              console.log(e)
             }
         });
+        
+      } catch (error) {
+        console.log(error)
+      }
     }
 </script>
 <!-- jQuery -->
