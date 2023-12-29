@@ -37,6 +37,15 @@ include 'assets/head.php';
   .analisis-item__validacion{
     grid-area: validacion;
   }
+
+  .input-invalid{
+    border: 1px solid #dc7e2f;
+    outline: 1px solid #dc7e2f;
+  }
+
+  .input-invalid:focus{
+    border: 1px solid #dc7e2f;
+  }
   </style>
 <div class="wrapper">
 
@@ -265,8 +274,6 @@ include 'assets/aside.php';
             arregloResultados
           }
 
-          console.log(data)
-
           let respuestaInsert = await fetch("./assets/save.php",{
             method: "POST",
             headers: {
@@ -276,15 +283,21 @@ include 'assets/aside.php';
           })
 
           let res = await respuestaInsert.json()
-          console.log(res)
-		  if(res.success){
-			$("#formResultados")[0].reset();
-			$(".analisis-wrapper").empty();
-		  }
-
-
-
-
+          if(res.success){
+            $("#formResultados")[0].reset();
+            $(".analisis-wrapper").empty();
+            Swal.fire({
+            title: "Datos guardados",
+            text: "",
+            icon: "success"
+            }).then((result) => {
+              if (result) {
+                location.reload()
+              }
+            });
+          }else{
+			      alert("Algo salió mal durante el guardado de datos");
+          }
         })
     })
 </script>
@@ -300,7 +313,6 @@ include 'assets/aside.php';
         body: JSON.stringify(data)
       })
       let response = await res.json()
-      console.log("allanalisis",response)
       let analisisWrapper = document.querySelector(".analisis-wrapper")
       analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
       response.respuesta.forEach(analisis => {
@@ -328,29 +340,25 @@ include 'assets/aside.php';
                 $('#select2lista').html(r);
             },
             error: function(e){
-              console.log(e)
             }
         });
         
       } catch (error) {
-        console.log(error)
       }
       let inputsResultados = document.querySelectorAll(".input-resultados");
-      console.log("inputsResultados",inputsResultados)
 
       inputsResultados.forEach(inputResultados => {
-        inputResultados.addEventListener("keyup", function(e){
-          console.log(inputResultados.value)
-          console.log(Number(inputResultados.parentElement.parentElement.querySelector(".analisis-item__valores .min-val").textContent))
+        inputResultados.addEventListener("input", function(e){
           let minVal = Number(inputResultados.parentElement.parentElement.querySelector(".analisis-item__valores .min-val").textContent)
           let maxVal = Number(inputResultados.parentElement.parentElement.querySelector(".analisis-item__valores .max-val").textContent)
           let divValidacion = inputResultados.parentElement.parentElement.querySelector(".analisis-item__validacion")
           divValidacion.innerHTML = ""
           if(Number(inputResultados.value) > maxVal || Number(inputResultados.value) < minVal){
             divValidacion.insertAdjacentHTML("beforeend","Valor fuera de rango");
+            inputResultados.classList.add('input-invalid')
+          }else{
+            inputResultados.classList.remove('input-invalid')
           }
-
-
         })
       })
     }

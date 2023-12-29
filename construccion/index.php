@@ -229,7 +229,6 @@ $(document).ready(function() {
 			body: JSON.stringify(datos),
 		})
 		let response = await res.json();
-		console.log(response)
 		if(response.success){
 			$("#formPT")[0].reset();
 			Swal.fire({
