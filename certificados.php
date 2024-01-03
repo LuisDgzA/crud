@@ -63,36 +63,7 @@ include 'assets/aside.php';
                     <th>Acciones</th>   
                   </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>TR33433HO</td>
-                      <td>PTN1212</td>
-                      <td>Breader BC-1487</td>
-                      <td>
-                      <a href="pdf/COA.pdf" class="btn btn-success"><i class="fa-solid fa-eye">Ver</i></a>
-                      </td>
-                    </tr>
-                  <?php
-                      /*include "conexion.php";																
-                      $query = mysqli_query($conexion, "SELECT l.lote, c.clave_pt, c.pt  
-                      FROM lote l INNER JOIN claves c WHERE l.id_pt = c.id_pt");
-                      $result = mysqli_num_rows($query);								
-                      if ($result > 0) {
-                        while ($data = mysqli_fetch_assoc($query)) { ?>
-                          <tr>
-                            <td class="text-center"><?php echo $data['lote']; ?></td>
-                            <td class="text-center"><?php echo $data['clave_pt']; ?></td>
-                            <td class="text-center"><?php echo $data['pt']; ?></td>
-                            
-                            <td class="text-center">
-                              <a href="ver_certificado.php?id=<?php echo $data['id_parametros']; ?>" class="btn btn-success"><i class="fa-solid fa-eye">Ver</i></a>
-                            </td>
-                          </tr>
-                          <?php }
-                          
-                        } */
-                   ?>                 
-                  </tbody>
+                  <tbody></tbody>
                 </table>
               </div>
         <!-- /.row (main row) -->
@@ -210,19 +181,51 @@ include 'assets/aside.php';
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script>
   $(function () {
+    getInfo()
+
+    function getInfo(){
+      $.ajax({
+        type: "POST",
+        url: "getAllResults.php",
+        async: false,
+        success: function(resp) {
+          let res = JSON.parse(resp)
+          let results = res.respuesta
+          if(results.length != 0){
+            results.forEach(result => {
+              container = $('#example1 tbody')
+              tr = $('<tr></tr>') 
+              tr.append('<td>'+result.lote+'</td>')
+              tr.append('<td>'+result.email+'</td>')
+              tr.append('<td>'+result.telefono+'</td>')
+              tr.append('<td><button class="btn btn-success" data-id="'+result.id+'">Ver</button></td>')
+              container.append(tr)
+            })
+            $('.dataTables_empty').hide()
+          }else{
+            $('.dataTables_empty').show()
+          }
+        },
+        error: function(e){
+        }
+      });
+    }
+
+
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+
+    // $('#example2').DataTable({
+    //   "paging": true,
+    //   "lengthChange": false,
+    //   "searching": false,
+    //   "ordering": true,
+    //   "info": true,
+    //   "autoWidth": false,
+    //   "responsive": true,
+    // });
   });
 </script>
 <!-- SweetAlert2 -->
