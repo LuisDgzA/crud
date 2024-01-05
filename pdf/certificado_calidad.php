@@ -8,10 +8,8 @@
     $mesActual = $meses[date('n')];
     $elaboracion = date('d').' '.$mesActual.' '.date('Y');
 
-    // $id = $_POST('id');
-    // $cantidad = $_POST('cantidad');
-    $id = 4;
-    $cantidad = 10;
+    $id = $_GET['id'];
+    $cantidad = $_GET['cant'];
     $query = "SELECT CONCAT_WS(' ', proveedores.email, proveedores.telefono) as proveedor,
              proveedor_resultado.lote, proveedores.condiciones as caducidad, proveedores.envio as presentacion 
              FROM `proveedor_resultado` 
