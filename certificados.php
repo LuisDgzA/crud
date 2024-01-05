@@ -237,7 +237,11 @@ include 'assets/aside.php';
               tr.append('<td>'+result.lote+'</td>')
               tr.append('<td>'+result.email+'</td>')
               tr.append('<td>'+result.telefono+'</td>')
+<<<<<<< HEAD
               tr.append('<td><button class="btn btn-success btn-pdf" data-id="'+result.id+'" data-toggle="modal" data-target="#modal-pdf">Ver</button></td>')
+=======
+              tr.append('<td><button class="btn btn-success" data-id="'+result.proveedor_id+'">Ver</button></td>')
+>>>>>>> fc3751c2d6bc4e76946e9e371aab54e50bb22008
               container.append(tr)
             })
             $('.dataTables_empty').hide()
