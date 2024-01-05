@@ -198,7 +198,7 @@ include 'assets/aside.php';
               tr.append('<td>'+result.lote+'</td>')
               tr.append('<td>'+result.email+'</td>')
               tr.append('<td>'+result.telefono+'</td>')
-              tr.append('<td><button class="btn btn-success" data-id="'+result.id+'">Ver</button></td>')
+              tr.append('<td><button class="btn btn-success" data-id="'+result.proveedor_id+'">Ver</button></td>')
               container.append(tr)
             })
             $('.dataTables_empty').hide()
