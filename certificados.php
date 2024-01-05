@@ -88,50 +88,80 @@ include 'assets/aside.php';
 </div>
 <!-- ./wrapper -->
 <div class="modal fade" id="modal-default">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Nuevo lote</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="assets/save_lote.php">
-                <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1000">
-                <div class="mb-3">
-                  <label class="form-label" for="exampleFormControlTextarea1">Clave del producto a asignar lote</label>
-                  <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_pt" id="id_pt">
-                    <?php 
-                      include("conexion.php");
-                      $query_rol = mysqli_query($conexion, "SELECT * FROM claves");
-                      mysqli_close($conexion);
-                      $resultado_rol = mysqli_num_rows($query_rol);
-                      if ($resultado_rol > 0) {
-                          while ($rol = mysqli_fetch_array($query_rol)) {
-                      ?>
-                      <option value="<?php echo $rol["id_pt"]; ?>"><?php echo $rol["clave_pt"]  ?></option>
-                      <?php
-                          }
-                        }
-                    ?>
-                  </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="exampleFormControlInput1">Lote</label>
-                        <input class="form-control" name="lote" id="lote" type="text" placeholder="Lote">
-                    </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-                    </form>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Nuevo lote</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form method="POST" action="assets/save_lote.php">
+						<div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1000">
+						<div class="mb-3">
+							<label class="form-label" for="exampleFormControlTextarea1">Clave del producto a asignar lote</label>
+							<select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;" name="id_pt" id="id_pt">
+							<?php 
+								include("conexion.php");
+								$query_rol = mysqli_query($conexion, "SELECT * FROM claves");
+								mysqli_close($conexion);
+								$resultado_rol = mysqli_num_rows($query_rol);
+								if ($resultado_rol > 0) {
+									while ($rol = mysqli_fetch_array($query_rol)) {
+								?>
+								<option value="<?php echo $rol["id_pt"]; ?>"><?php echo $rol["clave_pt"]  ?></option>
+								<?php
+									}
+								}
+							?>
+							</select>
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="exampleFormControlInput1">Lote</label>
+								<input class="form-control" name="lote" id="lote" type="text" placeholder="Lote">
+							</div>
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button type="submit" class="btn btn-primary">Guardar</button>
+					</div>
+				</form>
+			</div>
+		<!-- /.modal-content -->
+		</div>
+	<!-- /.modal-dialog -->
+	</div>
+</div>
+
+	  
+
+      <div class="modal fade" id="modal-pdf">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"></h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form action="" id="formGenerarPdf">
+							<div >
+								<label class="form-label" for="cantidad">Cantidad</label>
+								<input class="form-control" name="cantidad" id="cantidad" type="text" placeholder="cantidad" required>
+								<input class="form-control" name="id_proveedor_resultado" id="id_proveedor_resultado" type="hidden" >
+
+							</div>
+							<button class="btn btn-success mt-3 float-right">Generar</button>
+						</form>
+					</div>
+				</div>
+			</div>
       </div>
+
+
+	  
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -181,7 +211,16 @@ include 'assets/aside.php';
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script>
   $(function () {
-    getInfo()
+	try {
+		getInfo()
+		$("#example1").DataTable({
+		"responsive": true, "lengthChange": false, "autoWidth": false,
+		"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+		}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+		
+	} catch (error) {
+		console.log(error)
+	}
 
     function getInfo(){
       $.ajax({
@@ -198,7 +237,7 @@ include 'assets/aside.php';
               tr.append('<td>'+result.lote+'</td>')
               tr.append('<td>'+result.email+'</td>')
               tr.append('<td>'+result.telefono+'</td>')
-              tr.append('<td><button class="btn btn-success" data-id="'+result.id+'">Ver</button></td>')
+              tr.append('<td><button class="btn btn-success btn-pdf" data-id="'+result.id+'" data-toggle="modal" data-target="#modal-pdf">Ver</button></td>')
               container.append(tr)
             })
             $('.dataTables_empty').hide()
@@ -212,11 +251,38 @@ include 'assets/aside.php';
     }
 
 
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    
 
+    // let btnsPdf = document.querySelectorAll(".btn-pdf")
+    // btnsPdf.forEach(btnPdf =>{
+    //   btnPdf.addEventListener("click", function(){
+    //     alert(btnPdf.getAttribute("data-id"))
+    //   })
+    // })
+	$(document).on('shown.bs.modal', '#modal-pdf', function (event) {
+		let triggerElement = $(event.relatedTarget);
+		let id_proveedor_resultado = document.getElementById("id_proveedor_resultado")
+		let cantidad = document.getElementById("cantidad")
+		cantidad.value = ""
+		console.log(triggerElement[0].getAttribute("data-id"))
+		id_proveedor_resultado.value = triggerElement[0].getAttribute("data-id")
+	});
+	$(document).on('hidden.bs.modal', '#modal-pdf', function (event) {
+		let cantidad = document.getElementById("cantidad")
+		cantidad.value = ""
+	});
+	let formGenerarPdf = document.getElementById("formGenerarPdf")
+	formGenerarPdf.addEventListener("submit", function(e){
+		e.preventDefault()
+		let id_proveedor_resultado = document.getElementById("id_proveedor_resultado").value
+		let cantidad = document.getElementById("cantidad").value
+		let data = {
+			id_proveedor_resultado,
+			cantidad
+		}
+		console.log(data)
+
+	})
     // $('#example2').DataTable({
     //   "paging": true,
     //   "lengthChange": false,
