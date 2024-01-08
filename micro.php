@@ -273,6 +273,7 @@ include 'assets/aside.php';
             comentarios,
             arregloResultados
           }
+          console.log(data)
 
           let respuestaInsert = await fetch("./assets/save.php",{
             method: "POST",
@@ -318,7 +319,7 @@ include 'assets/aside.php';
       analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
       response.respuesta.forEach(analisis => {
         let  arraySensorial = ["Sabor","Olor","Color"];
-        let typeInput = arraySensorial.includes(analisis.analisis) ? "text" : "number";
+        let typeInput = arraySensorial.includes(analisis.analisis) ? `<select class="form-control input-resultados" dataIPA="${analisis.id_proveedor_analisis}"><option value="0">Seleccione el valor</option><option value="N/A">N/A</option><option value="Cumple">Cumple</option></select>` : `<input class="form-control input-resultados" type="number" step='any' dataIPA="${analisis.id_proveedor_analisis}" required>`;
         let step = arraySensorial.includes(analisis.analisis) ? "" : "step='any'";
 
         analisisWrapper.insertAdjacentHTML("beforeend",
@@ -330,7 +331,7 @@ include 'assets/aside.php';
           </div>
           <div class="analisis-item__input">
             <label class="form-label" for="">Resultado</label>
-            <input class="form-control input-resultados" type=${typeInput} ${step} dataIPA="${analisis.id_proveedor_analisis}" required>
+            ${typeInput}
           </div>
           <div class="analisis-item__validacion">
           </div>
