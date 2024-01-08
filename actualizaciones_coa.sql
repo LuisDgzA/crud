@@ -20,8 +20,12 @@ CREATE TABLE proveedor_resultado(
 
 ALTER TABLE `proveedor_resultado` ADD CONSTRAINT `fk_proveedor_analisis_resultado` FOREIGN KEY (`proveedor_analisis_id`) REFERENCES `proveedor_analisis`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
 
+
+-- 07012024
 ALTER TABLE `proveedor_analisis` ADD `fecha_registro` DATETIME NOT NULL AFTER `maximo`; 
 ALTER TABLE `analisis` ADD `unidad` VARCHAR(35) NOT NULL AFTER `categoria`; 
 ALTER TABLE `proveedor_analisis` CHANGE `minimo` `minimo` DECIMAL(10,2) NULL DEFAULT NULL; 
 ALTER TABLE `proveedor_analisis` CHANGE `maximo` `maximo` DECIMAL(10,2) NULL DEFAULT NULL; 
 ALTER TABLE `proveedor_analisis` ADD `fecha_caducidad` DATE NOT NULL AFTER `fecha_registro`, ADD `empaque` VARCHAR(50) NOT NULL AFTER `fecha_caducidad`; 
+ALTER TABLE `proveedor_resultado` CHANGE `resultado` `resultado` VARCHAR(50) NULL DEFAULT NULL;
+INSERT INTO `analisis` (`id_analisis`, `nombre_a`, `categoria`, `unidad`) VALUES (NULL, 'Color', 'Sensorial', 'N/A') 

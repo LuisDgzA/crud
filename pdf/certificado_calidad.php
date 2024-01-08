@@ -133,7 +133,7 @@
                     $pdf->Cell(30, 4, $resultado['unidad'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['minimo'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['maximo'], 1, 0, 'C', 0);
-                    $pdf->Cell(28, 4, number_format($resultado['resultado'],2,'.',','), 1, 0, 'C', 0);
+                    $pdf->Cell(28, 4, $resultado['resultado'], 1, 0, 'C', 0);
                 }
                 break;
             case 'Fisicoquímicos':
@@ -148,7 +148,7 @@
                     $pdf->Cell(30, 4, $resultado['unidad'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['minimo'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['maximo'], 1, 0, 'C', 0);
-                    $pdf->Cell(28, 4, number_format($resultado['resultado'],2,'.',','), 1, 0, 'C', 0);
+                    $pdf->Cell(28, 4, $resultado['resultado'], 1, 0, 'C', 0);
                 }
                 break;
             case 'Microbiológicos':
@@ -163,7 +163,7 @@
                     $pdf->Cell(30, 4, $resultado['unidad'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['minimo'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['maximo'], 1, 0, 'C', 0);
-                    $pdf->Cell(28, 4, number_format($resultado['resultado'],2,'.',','), 1, 0, 'C', 0);
+                    $pdf->Cell(28, 4, $resultado['resultado'], 1, 0, 'C', 0);
                 }
                 break;
             
@@ -178,7 +178,7 @@
 
     function getResultados($conexion, $id, $cat, $lote){
         $query_results = "SELECT proveedor_analisis.analisis_id, analisis.nombre_a, analisis.categoria, analisis.unidad, 
-                            proveedor_analisis.minimo, proveedor_analisis.maximo, IF('$cat' = 'Sensorial', proveedor_resultado.resultado, AVG(proveedor_resultado.resultado)) as resultado 
+                            proveedor_analisis.minimo, proveedor_analisis.maximo, IF('$cat' = 'Sensorial', proveedor_resultado.resultado, FORMAT(AVG(proveedor_resultado.resultado),2)) as resultado 
                             FROM proveedor_analisis 
                             INNER JOIN analisis ON analisis.id_analisis = proveedor_analisis.analisis_id 
                             INNER JOIN proveedor_resultado ON proveedor_resultado.proveedor_analisis_id = proveedor_analisis.id
