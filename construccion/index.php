@@ -99,12 +99,12 @@
 
 		<div class="col-md-4">
 			<label>Mínimo</label>
-			<input type="number" name="min[]" class="form-control inp-min" required>
+			<input type="number" step="any" name="min[]" class="form-control inp-min" required>
 		</div>
 
 		<div class="col-md-4">
 			<label>Máximo</label>
-			<input type="number" name="max[]" class="form-control inp-max" required>
+			<input type="number" step="any" name="max[]" class="form-control inp-max" required>
 		</div>
 	</div>
 
@@ -309,12 +309,12 @@ $(document).ready(function() {
 
 				<div class="col-md-3">
 					<label>Mínimo</label>
-					<input type="number" name="min[]" class="form-control inp-min" required>
+					<input type="number" step="any" name="min[]" class="form-control inp-min" required>
 				</div>
 
 				<div class="col-md-3">
 					<label>Máximo</label>
-					<input type="number" name="max[]" class="form-control inp-max" required>
+					<input type="number" step="any" name="max[]" class="form-control inp-max" required>
 				</div>
 
 				<div class="col-md-2">					

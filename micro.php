@@ -316,6 +316,10 @@ include 'assets/aside.php';
       let analisisWrapper = document.querySelector(".analisis-wrapper")
       analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
       response.respuesta.forEach(analisis => {
+        let  = ["Sabor","Olor","Color"]:
+        let typeInput = arraySensorial.includes(analisis.analisis) ? "text" : "number";
+        let step = arraySensorial.includes(analisis.analisis) ? "" : "step='any'";
+
         analisisWrapper.insertAdjacentHTML("beforeend",
         `<div class="analisis-item">
               <div class="analisis-item__name">${analisis.analisis}</div>
@@ -325,7 +329,7 @@ include 'assets/aside.php';
           </div>
           <div class="analisis-item__input">
             <label class="form-label" for="">Resultado</label>
-            <input class="form-control input-resultados" type="number" dataIPA="${analisis.id_proveedor_analisis}" required>
+            <input class="form-control input-resultados" type=${typeInput} ${step} dataIPA="${analisis.id_proveedor_analisis}" required>
           </div>
           <div class="analisis-item__validacion">
           </div>
