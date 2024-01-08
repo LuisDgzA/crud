@@ -314,6 +314,7 @@ include 'assets/aside.php';
       })
       let response = await res.json()
       let analisisWrapper = document.querySelector(".analisis-wrapper")
+      analisisWrapper.innerHTML = "";
       analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
       response.respuesta.forEach(analisis => {
         let  arraySensorial = ["Sabor","Olor","Color"];
