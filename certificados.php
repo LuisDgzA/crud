@@ -277,6 +277,7 @@ include 'assets/aside.php';
 		let id_proveedor_resultado = document.getElementById("id_proveedor_resultado").value
 		let cantidad = document.getElementById("cantidad").value
     window.open(`pdf/certificado_calidad.php?id=${id_proveedor_resultado}&cant=${cantidad}`)
+    $('#modal-pdf').modal("toggle");
 
 	})
     // $('#example2').DataTable({
