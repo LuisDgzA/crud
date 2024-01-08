@@ -316,7 +316,7 @@ include 'assets/aside.php';
       let analisisWrapper = document.querySelector(".analisis-wrapper")
       analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
       response.respuesta.forEach(analisis => {
-        let  = ["Sabor","Olor","Color"]:
+        let  arraySensorial = ["Sabor","Olor","Color"];
         let typeInput = arraySensorial.includes(analisis.analisis) ? "text" : "number";
         let step = arraySensorial.includes(analisis.analisis) ? "" : "step='any'";
 
