@@ -151,6 +151,7 @@ include 'assets/aside.php';
 								<label class="form-label" for="cantidad">Cantidad</label>
 								<input class="form-control" name="cantidad" id="cantidad" type="text" placeholder="cantidad" required>
 								<input class="form-control" name="id_proveedor_resultado" id="id_proveedor_resultado" type="hidden" >
+								<input class="form-control" name="lote" id="lote" type="hidden" >
 
 							</div>
 							<button class="btn btn-success mt-3 float-right">Generar</button>
@@ -237,7 +238,7 @@ include 'assets/aside.php';
               tr.append('<td>'+result.lote+'</td>')
               tr.append('<td>'+result.email+'</td>')
               tr.append('<td>'+result.telefono+'</td>')
-              tr.append('<td><button class="btn btn-success btn-pdf" data-id="'+result.proveedor_id+'" data-toggle="modal" data-target="#modal-pdf">Ver</button></td>')
+              tr.append('<td><button class="btn btn-success btn-pdf" data-id="'+result.proveedor_id+'" data-lote="'+result.lote+'" data-toggle="modal" data-target="#modal-pdf">Ver</button></td>')
               container.append(tr)
             })
             $('.dataTables_empty').hide()
@@ -264,8 +265,8 @@ include 'assets/aside.php';
 		let id_proveedor_resultado = document.getElementById("id_proveedor_resultado")
 		let cantidad = document.getElementById("cantidad")
 		cantidad.value = ""
-		console.log(triggerElement[0].getAttribute("data-id"))
 		id_proveedor_resultado.value = triggerElement[0].getAttribute("data-id")
+		lote.value = triggerElement[0].getAttribute("data-lote")
 	});
 	$(document).on('hidden.bs.modal', '#modal-pdf', function (event) {
 		let cantidad = document.getElementById("cantidad")
@@ -276,7 +277,8 @@ include 'assets/aside.php';
 		e.preventDefault()
 		let id_proveedor_resultado = document.getElementById("id_proveedor_resultado").value
 		let cantidad = document.getElementById("cantidad").value
-    window.open(`pdf/certificado_calidad.php?id=${id_proveedor_resultado}&cant=${cantidad}`)
+		let lote = document.getElementById("lote").value
+    window.open(`pdf/certificado_calidad.php?id=${id_proveedor_resultado}&cant=${cantidad}&lote=${lote}`)
     $('#modal-pdf').modal("toggle");
 
 	})

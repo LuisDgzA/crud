@@ -10,12 +10,14 @@
 
     $id = $_GET['id'];
     $cantidad = $_GET['cant'];
+    $lote = $_GET['lote'];
     $query = "SELECT CONCAT_WS(' ', proveedores.email, proveedores.telefono) as proveedor,
              proveedor_resultado.lote, proveedores.condiciones as caducidad, proveedores.envio as presentacion 
              FROM `proveedor_resultado` 
              INNER JOIN proveedor_analisis ON proveedor_analisis.id = proveedor_resultado.proveedor_analisis_id 
              INNER JOIN proveedores ON proveedores.id = proveedor_analisis.proveedor_id 
-             WHERE proveedor_analisis.proveedor_id = $id ";
+             WHERE proveedor_analisis.proveedor_id = $id 
+             AND lote = '$lote'";
     $res = mysqli_query($conexion, $query);
     $info = mysqli_fetch_assoc($res);
     $fecha = explode('-', $info['caducidad']);
@@ -28,6 +30,7 @@
                        INNER JOIN analisis ON analisis.id_analisis = proveedor_analisis.analisis_id 
                        INNER JOIN proveedor_resultado ON proveedor_resultado.proveedor_analisis_id = proveedor_analisis.id
                        WHERE proveedor_analisis.proveedor_id = $id
+                       AND proveedor_resultado.lote = '$lote'
                        GROUP BY analisis.categoria";
     $res_query = mysqli_query($conexion, $query_analisis);
     $info_analisis = mysqli_fetch_all($res_query, MYSQLI_ASSOC);
@@ -121,13 +124,13 @@
             case 'Sensorial':
                 $cat = 'Sensorial';
                 $pdf->printHeader(160, 4, 'SENSORIAL', 1, 0, 'C', 0);
-                $resultados = getResultados($conexion, $id, $cat);
+                $resultados = getResultados($conexion, $id, $cat, $lote);
                 foreach($resultados as $resultado){
                     $pdf->Ln();
                     $pdf->setX(25);
 			        $pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
                     $pdf->Cell(50, 4, $resultado['nombre_a'], 1, 0, 'C', 0);
-                    $pdf->Cell(30, 4, '0', 1, 0, 'C', 0);
+                    $pdf->Cell(30, 4, $resultado['unidad'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['minimo'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['maximo'], 1, 0, 'C', 0);
                     $pdf->Cell(28, 4, number_format($resultado['resultado'],2,'.',','), 1, 0, 'C', 0);
@@ -136,13 +139,13 @@
             case 'Fisicoquímicos':
                 $cat = 'Fisicoquímicos';
                 $pdf->printHeader(160, 4, 'FISICOQUÍMICOS', 1, 0, 'C', 0);
-                $resultados = getResultados($conexion, $id, $cat);
+                $resultados = getResultados($conexion, $id, $cat, $lote);
                 foreach($resultados as $resultado){
                     $pdf->Ln();
                     $pdf->setX(25);
 			        $pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
                     $pdf->Cell(50, 4, $resultado['nombre_a'], 1, 0, 'C', 0);
-                    $pdf->Cell(30, 4, '%', 1, 0, 'C', 0);
+                    $pdf->Cell(30, 4, $resultado['unidad'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['minimo'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['maximo'], 1, 0, 'C', 0);
                     $pdf->Cell(28, 4, number_format($resultado['resultado'],2,'.',','), 1, 0, 'C', 0);
@@ -151,13 +154,13 @@
             case 'Microbiológicos':
                 $cat = 'Microbiológicos';
                 $pdf->printHeader(160, 4, 'MICROBIOLÓGICOS', 1, 0, 'C', 0);
-                $resultados = getResultados($conexion, $id, $cat);
+                $resultados = getResultados($conexion, $id, $cat, $lote);
                 foreach($resultados as $resultado){
                     $pdf->Ln();
                     $pdf->setX(25);
 			        $pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
                     $pdf->Cell(50, 4, $resultado['nombre_a'], 1, 0, 'C', 0);
-                    $pdf->Cell(30, 4, 'UFC/g', 1, 0, 'C', 0);
+                    $pdf->Cell(30, 4, $resultado['unidad'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['minimo'], 1, 0, 'C', 0);
                     $pdf->Cell(26, 4, $resultado['maximo'], 1, 0, 'C', 0);
                     $pdf->Cell(28, 4, number_format($resultado['resultado'],2,'.',','), 1, 0, 'C', 0);
@@ -173,13 +176,13 @@
     $pdf->Output();
     exit();
 
-    function getResultados($conexion, $id, $cat){
-        $query_results = "SELECT proveedor_analisis.analisis_id, analisis.nombre_a, analisis.categoria, 
-                            proveedor_analisis.minimo, proveedor_analisis.maximo, AVG(proveedor_resultado.resultado) as resultado 
+    function getResultados($conexion, $id, $cat, $lote){
+        $query_results = "SELECT proveedor_analisis.analisis_id, analisis.nombre_a, analisis.categoria, analisis.unidad, 
+                            proveedor_analisis.minimo, proveedor_analisis.maximo, IF('$cat' = 'Sensorial', proveedor_resultado.resultado, AVG(proveedor_resultado.resultado)) as resultado 
                             FROM proveedor_analisis 
                             INNER JOIN analisis ON analisis.id_analisis = proveedor_analisis.analisis_id 
                             INNER JOIN proveedor_resultado ON proveedor_resultado.proveedor_analisis_id = proveedor_analisis.id
-                            WHERE proveedor_analisis.proveedor_id = $id AND analisis.categoria = '$cat'
+                            WHERE proveedor_analisis.proveedor_id = $id AND analisis.categoria = '$cat' AND proveedor_resultado.lote = '$lote'
                             GROUP BY analisis.nombre_a;";
         $res_query = mysqli_query($conexion, $query_results);
         $info_res = mysqli_fetch_all($res_query, MYSQLI_ASSOC);
