@@ -264,6 +264,8 @@ include 'assets/aside.php';
 		let triggerElement = $(event.relatedTarget);
 		let id_proveedor_resultado = document.getElementById("id_proveedor_resultado")
 		let cantidad = document.getElementById("cantidad")
+		let lote = document.getElementById("lote")
+
 		cantidad.value = ""
 		id_proveedor_resultado.value = triggerElement[0].getAttribute("data-id")
 		lote.value = triggerElement[0].getAttribute("data-lote")

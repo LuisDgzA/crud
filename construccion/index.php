@@ -55,7 +55,7 @@
 <form id="formPT" method="POST">
 	<div class="row ">
 		<hr />
-		<div class="col-lg-6 col-md-6 col-sm-6">
+		<div class="col-lg-4 col-md-4 col-sm-4">
 			<h2>Detalles del PT :</h2>
 				<select class="proveedor form-control" name="proveedor" id="proveedor" required>
 				<option value="">Selecciona el PT</option>
@@ -64,17 +64,27 @@
 			<h4><strong>PT: </strong><span id="email"></span></h4>
 			<h4><strong>Descripción: </strong><span id="telefono"></span></h4>
 		</div>
-		<div class="col-lg-6 col-md-6 col-sm-6">
+		<div class="col-lg-8 col-md-6 col-sm-6">
 			<h2></h2>					
 			<div class="row">
-				<div class="col-lg-6">
-				<label>Caducidad</label>
-				<input type="date" name="condiciones" id="condiciones" class="form-control" required>
+				<div class="col-lg-4">
+					<label for="">&nbsp;</label>
+					<select class="form-control" name="" id="mesesCaducidad">
+						<option value="">Seleccione una opción</option>
+						<option value="1">6 meses</option>
+						<option value="9">9 meses</option>
+						<option value="12">12 meses</option>
+						<option value="18">18 meses</option>
+					</select>
+				</div>
+				<div class="col-lg-4">
+					<label>Caducidad</label>
+					<input type="date" name="condiciones" id="condiciones" class="form-control" required>
 				</div>
 				
-				<div class="col-lg-6">
-				<label>Empaque</label>
-				<input type="text" name="envio" id="envio" class="form-control" required>
+				<div class="col-lg-4">
+					<label>Empaque</label>
+					<input type="text" name="envio" id="envio" class="form-control" required>
 				</div>
 				
 			</div>                  
@@ -153,6 +163,19 @@ $(document).ready(function() {
 		$('#telefono').html(telefono);
 })
 });
+
+	let mesesCaducidad = document.getElementById("mesesCaducidad")
+	mesesCaducidad.addEventListener("change",() => {
+		// console.log(mesesCaducidad.value)
+		let currentDate = new Date();
+		let fechaCaducidad = new Date();
+		let condiciones = document.getElementById("condiciones")
+		fechaCaducidad.setMonth(currentDate.getMonth()+mesesCaducidad.value)
+		condiciones.value = fechaCaducidad.getFullYear()+"-"+(fechaCaducidad.getMonth()+1).toString().padStart(2, "0")+"-"+fechaCaducidad.getDate().toString().padStart(2, "0");
+		// console.log(fechaCaducidad.getFullYear()+"-"+(fechaCaducidad.getMonth()+1).toString().padStart(2, "0")+"-"+fechaCaducidad.getDate().toString().padStart(2, "0"))
+		// console.log(fechaCaducidad)
+
+	})
 
 	function mostrar_items(){
 		var parametros={"action":"ajax"};
@@ -291,7 +314,7 @@ $(document).ready(function() {
 </script>
 <script type="text/javascript">
 	let data_select = "<?= $data_select ?>";
-	console.log(data_select)
+	// console.log(data_select)
 	$(function () { 
 	var i = 1;
 	$('.add-btn').click(function (e) {

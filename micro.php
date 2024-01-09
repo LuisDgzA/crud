@@ -219,13 +219,17 @@ include 'assets/aside.php';
                         <input class="form-control" name="leva" id="leva" placeholder="Levadura">
                     </div>-->
                     <div class="mb-3">
-                        <label class="form-label" for="exampleFormControlTextarea1">Estatus</label>
+                        <label class="form-label" for="estatus">Estatus</label>
                         <input class="form-control" name="estatus" id="estatus" placeholder="Estatus">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="exampleFormControlTextarea1">Comentarios</label>
+                        <label class="form-label" for="comentarios">Comentarios</label>
                         <input class="form-control" name="com" id="comentarios" placeholder="Comentarios">
-                    </div> 
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="responsable">Responsable</label>
+                        <input class="form-control" name="responsable" id="responsable" placeholder="Responsable" required>
+                    </div>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -256,6 +260,8 @@ include 'assets/aside.php';
           id_producto = document.getElementById("id_producto").value,
           estatus = document.getElementById("estatus").value,
           comentarios = document.getElementById("comentarios").value,
+          responsable = document.getElementById("responsable").value,
+
           arregloInputResultados = document.querySelectorAll(".input-resultados"),
           arregloResultados = []
 
@@ -271,7 +277,8 @@ include 'assets/aside.php';
             id_producto,
             estatus,
             comentarios,
-            arregloResultados
+            arregloResultados,
+            responsable
           }
           console.log(data)
 
