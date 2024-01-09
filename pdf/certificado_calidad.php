@@ -11,7 +11,7 @@
     $id = $_GET['id'];
     $cantidad = $_GET['cant'];
     $lote = $_GET['lote'];
-    $query = "SELECT CONCAT_WS(' ', proveedores.email, proveedores.telefono) as proveedor,
+    $query = "SELECT CONCAT_WS(' ', proveedores.email, proveedores.telefono) as proveedor, proveedor_resultado.responsable,
              proveedor_resultado.lote, proveedores.condiciones as caducidad, proveedores.envio as presentacion 
              FROM `proveedor_resultado` 
              INNER JOIN proveedor_analisis ON proveedor_analisis.id = proveedor_resultado.proveedor_analisis_id 
@@ -116,6 +116,12 @@
     $pdf->Cell(50, 4, 'Presentación', 1, 0, 'L', 0);
 	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
     $pdf->Cell(110, 4, $info['presentacion'], 1, 0, 'L', 0);
+    $pdf->Ln();
+    $pdf->setX(25);
+	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+    $pdf->Cell(50, 4, 'Responsable', 1, 0, 'L', 0);
+	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
+    $pdf->Cell(110, 4, $info['responsable'], 1, 0, 'L', 0);
     
     // $pdf->Ln(9);
 
