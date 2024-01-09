@@ -228,7 +228,7 @@ include 'assets/aside.php';
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="responsable">Responsable</label>
-                        <input class="form-control" name="responsable" id="responsable" placeholder="Responsable" required>
+                        <input class="form-control" name="responsable" id="responsable" placeholder="Responsable que analizó" required>
                     </div>
             </div>
             <div class="modal-footer justify-content-between">

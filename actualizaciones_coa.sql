@@ -29,3 +29,5 @@ ALTER TABLE `proveedor_analisis` CHANGE `maximo` `maximo` DECIMAL(10,2) NULL DEF
 ALTER TABLE `proveedor_analisis` ADD `fecha_caducidad` DATE NOT NULL AFTER `fecha_registro`, ADD `empaque` VARCHAR(50) NOT NULL AFTER `fecha_caducidad`; 
 ALTER TABLE `proveedor_resultado` CHANGE `resultado` `resultado` VARCHAR(50) NULL DEFAULT NULL;
 INSERT INTO `analisis` (`id_analisis`, `nombre_a`, `categoria`, `unidad`) VALUES (NULL, 'Color', 'Sensorial', 'N/A') 
+
+ALTER TABLE `proveedor_resultado` ADD `responsable` VARCHAR(100) NOT NULL AFTER `comentarios`; 

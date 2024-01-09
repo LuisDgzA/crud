@@ -4,12 +4,13 @@
 
     // get values 
     $_POST = json_decode(file_get_contents('php://input'), true);
-    $lote = $_POST['lote']; $estatus = $_POST['estatus']; $comentarios = $_POST['comentarios'];
+    $lote = $_POST['lote']; $estatus = $_POST['estatus']; $comentarios = $_POST['comentarios']; $responsable = $_POST['responsable'];
     foreach($_POST['arregloResultados'] as $resultado){
         $proveedor_analisis_id = $resultado['id_proveedor_analisis']; 
         $res_val = $resultado['valorResultado'];
         try {
-            $insert_resultado = "INSERT INTO proveedor_resultado(proveedor_analisis_id, lote, resultado, estatus, comentarios) VALUES($proveedor_analisis_id, '$lote', '$res_val', '$estatus', '$comentarios');"; 
+            $insert_resultado = "INSERT INTO proveedor_resultado(proveedor_analisis_id, lote, resultado, estatus, comentarios, responsable) 
+                                 VALUES($proveedor_analisis_id, '$lote', '$res_val', '$estatus', '$comentarios', '$responsable');"; 
             $resultado_insert = mysqli_query($conexion, $insert_resultado);
         } catch (\Throwable $th) {
             // throw $th;
