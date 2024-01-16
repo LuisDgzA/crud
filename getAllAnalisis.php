@@ -12,7 +12,7 @@ $id_pt = $_POST['id_pt'];
 // var_dump($id_pt);
 
 try {
-    $getAnalisis = "SELECT pa.id AS id_proveedor_analisis, a.nombre_a AS analisis, pa.minimo AS min, pa.maximo AS max, pa.fecha_registro 
+    $getAnalisis = "SELECT pa.id AS id_proveedor_analisis, a.nombre_a AS analisis, pa.minimo AS min, pa.maximo AS max, pa.fecha_registro, pa.texto 
                     FROM proveedor_analisis pa
                     INNER JOIN analisis a ON pa.analisis_id = a.id_analisis
                     WHERE proveedor_id = $id_pt

@@ -12,10 +12,10 @@ $condiciones = $_POST['condiciones'];
 $envio = $_POST['envio']; 
 $allAnalisis = $_POST['allAnalisis'];
 foreach ($allAnalisis as $analisis) {
-    $analisis_id = $analisis['id_analisis']; $minimo = $analisis['minValue']; $maximo = $analisis['maxValue'];
+    $analisis_id = $analisis['id_analisis']; $minimo = $analisis['minValue']; $maximo = $analisis['maxValue']; $texto = $analisis['text'];
     try {
-        $insert_analisis = "INSERT INTO proveedor_analisis (proveedor_id, analisis_id, minimo, maximo, fecha_registro, fecha_caducidad, empaque) 
-                            VALUES('$proveedor_id', '$analisis_id', '$minimo', '$maximo',NOW(), '$condiciones', '$envio');";
+        $insert_analisis = "INSERT INTO proveedor_analisis (proveedor_id, analisis_id, minimo, maximo, texto, fecha_registro, fecha_caducidad, empaque) 
+                            VALUES('$proveedor_id', '$analisis_id', '$minimo', '$maximo', '$texto', NOW(), '$condiciones', '$envio');";
         $resultadoInsertUser = mysqli_query($con, $insert_analisis);
     } catch (\Throwable $th) {
         //throw $th;

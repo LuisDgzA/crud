@@ -16,6 +16,7 @@
 	mysqli_close($conexion);
 	$resultado_rol = mysqli_num_rows($query_rol);
 	if ($resultado_rol > 0) {
+		$data_select .= "<option value='0' selected disabled>Seleccione una opción</option>"; 
 		while ($rol = mysqli_fetch_array($query_rol)) {									
 			$data_select .= "<option value=".$rol['id_analisis'].">".$rol["nombre_a"]."</option>";					
 
@@ -106,16 +107,11 @@
 							?>
 			</select> 
 		</div>
-
-		<div class="col-md-4">
-			<label>Mínimo</label>
-			<input type="number" step="any" name="min[]" class="form-control inp-min" required>
+		
+		<div class="showElements col-md-8">
+			
 		</div>
-
-		<div class="col-md-4">
-			<label>Máximo</label>
-			<input type="number" step="any" name="max[]" class="form-control inp-max" required>
-		</div>
+		
 	</div>
 
 	<div class="newData"></div>
@@ -163,6 +159,40 @@ $(document).ready(function() {
 		$('#telefono').html(telefono);
 })
 });
+
+	$(document).on('change', '.select-analisis', function(){
+		console.log('change')
+		let val = $(this).val()
+		elemento = $(this).parent().parent()
+		let showElements = elemento.find(".showElements")
+		$(showElements).html("");
+		console.log(elemento)
+		if(val == 1 || val == 5 || val == 7){
+			$(showElements).html(`
+				<div class="col-md-12">
+					<label>&nbsp;</label>
+					<textarea class="form-control inp-text" name="textarea[]" rows="1" placeholder="Texto" required></textarea>
+				</div>
+				<input type="hidden" name="max[]" class="inp-max" value="0">
+				<input type="hidden" name="min[]" class="inp-min" value="0">
+			`);
+
+			
+		}else{
+			$(showElements).html(`
+				<div class="col-md-6">
+					<label>Mínimo</label>
+					<input type="number" step="any" name="min[]" class="form-control inp-min" required>
+				</div>
+				<div class="col-md-6">
+					<label>Máximo</label>
+					<input type="number" step="any" name="max[]" class="form-control inp-max" required>
+				</div>
+				<input type="hidden" name="text[]" class="inp-text" value="0">
+
+			`);
+		}
+	})
 
 	let mesesCaducidad = document.getElementById("mesesCaducidad")
 	mesesCaducidad.addEventListener("change",() => {
@@ -214,9 +244,7 @@ $(document).ready(function() {
 		,selectAnalisis = document.querySelectorAll('.select-analisis')
 		,minValues = document.querySelectorAll('.inp-min')
 		,maxValues = document.querySelectorAll('.inp-max')
-		,analisisArray = []
-		,minValuesArray = []
-		,maxValuesArray = [],
+		,allTexts = document.querySelectorAll('.inp-text')
 		allAnalisis = []
 
 
@@ -224,7 +252,10 @@ $(document).ready(function() {
 			allAnalisis[index] = {
 				id_analisis: selectAnalisis[index].value,
 				minValue: minValues[index].value,
-				maxValue: maxValues[index].value
+				maxValue: maxValues[index].value,
+				text: allTexts[index].value,
+
+
 			}
 			// analisisArray.push(selectAnalisis[index])
 			
@@ -329,17 +360,10 @@ $(document).ready(function() {
 						${data_select}		
 					</select> 
 				</div>
-
-				<div class="col-md-3">
-					<label>Mínimo</label>
-					<input type="number" step="any" name="min[]" class="form-control inp-min" required>
+				<div class="showElements col-md-6">
+			
 				</div>
-
-				<div class="col-md-3">
-					<label>Máximo</label>
-					<input type="number" step="any" name="max[]" class="form-control inp-max" required>
-				</div>
-
+				
 				<div class="col-md-2">					
 					<button class="btn btn-danger btn-remover">Remover</button>
 				</div>

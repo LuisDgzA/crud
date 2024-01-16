@@ -183,7 +183,9 @@
     exit();
 
     function getResultados($conexion, $id, $cat, $lote){
-        $query_results = "SELECT proveedor_analisis.analisis_id, analisis.nombre_a, analisis.categoria, analisis.unidad, 
+        $query_results = "SELECT proveedor_analisis.analisis_id, analisis.nombre_a, analisis.categoria, 
+                            analisis.unidad,
+                            -- IF('$cat' = 'Sensorial', proveedor_analisis.texto, analisis.unidad) as unidad, 
                             proveedor_analisis.minimo, proveedor_analisis.maximo, IF('$cat' = 'Sensorial', proveedor_resultado.resultado, FORMAT(AVG(proveedor_resultado.resultado),2)) as resultado 
                             FROM proveedor_analisis 
                             INNER JOIN analisis ON analisis.id_analisis = proveedor_analisis.analisis_id 

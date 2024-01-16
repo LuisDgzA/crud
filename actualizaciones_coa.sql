@@ -31,3 +31,5 @@ ALTER TABLE `proveedor_resultado` CHANGE `resultado` `resultado` VARCHAR(50) NUL
 INSERT INTO `analisis` (`id_analisis`, `nombre_a`, `categoria`, `unidad`) VALUES (NULL, 'Color', 'Sensorial', 'N/A') 
 
 ALTER TABLE `proveedor_resultado` ADD `responsable` VARCHAR(100) NOT NULL AFTER `comentarios`; 
+
+ALTER TABLE `proveedor_analisis` ADD `texto` TEXT NOT NULL AFTER `maximo`; 

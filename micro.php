@@ -250,7 +250,6 @@ include 'assets/aside.php';
         $('#id_producto').change(function() {
             let id_value = this.value
             recargarLista(id_value);
-            
         });
         
         let formResultados = document.getElementById("formResultados");
@@ -326,15 +325,14 @@ include 'assets/aside.php';
       analisisWrapper.insertAdjacentHTML("beforeend",`<div style="width: 100%; "><b>Análisis</b></div>`);
       response.respuesta.forEach(analisis => {
         let  arraySensorial = ["Sabor","Olor","Color"];
-        let typeInput = arraySensorial.includes(analisis.analisis) ? `<select class="form-control input-resultados" dataIPA="${analisis.id_proveedor_analisis}"><option value="0">Seleccione el valor</option><option value="N/A">N/A</option><option value="Cumple">Cumple</option></select>` : `<input class="form-control input-resultados" type="number" step='any' dataIPA="${analisis.id_proveedor_analisis}" required>`;
+        let typeInput = arraySensorial.includes(analisis.analisis) ? `<select class="form-control input-resultados" dataIPA="${analisis.id_proveedor_analisis}"><option value="0">Seleccione el valor</option><option value="No aplica">No aplica</option><option value="Aplica">Aplica</option></select>` : `<input class="form-control input-resultados" type="number" step='any' dataIPA="${analisis.id_proveedor_analisis}" required>`;
         let step = arraySensorial.includes(analisis.analisis) ? "" : "step='any'";
-
+        let isFrase = arraySensorial.includes(analisis.analisis) ? `${analisis.texto}` : `<div>Min. <span class="min-val">${analisis.min}</span></div>  <div>Max. <span class="max-val">${analisis.max}</span></div>`;
         analisisWrapper.insertAdjacentHTML("beforeend",
         `<div class="analisis-item">
               <div class="analisis-item__name">${analisis.analisis}</div>
           <div  class="analisis-item__valores">
-            <div>Min. <span class="min-val">${analisis.min}</span></div>
-            <div>Max. <span class="max-val">${analisis.max}</span></div>
+            ${isFrase}
           </div>
           <div class="analisis-item__input">
             <label class="form-label" for="">Resultado</label>
