@@ -60,6 +60,8 @@ include 'assets/aside.php';
                     <th>Lotes</th>
                     <th>Clave PT</th>
                     <th>Producto terminado</th>
+                    <th>Responsable</th>
+
                     <th>Acciones</th>   
                   </tr>
                   </thead>
@@ -238,6 +240,7 @@ include 'assets/aside.php';
               tr.append('<td>'+result.lote+'</td>')
               tr.append('<td>'+result.email+'</td>')
               tr.append('<td>'+result.telefono+'</td>')
+              tr.append('<td>'+result.responsable+'</td>')
               tr.append('<td><button class="btn btn-success btn-pdf" data-id="'+result.proveedor_id+'" data-lote="'+result.lote+'" data-toggle="modal" data-target="#modal-pdf">Ver</button></td>')
               container.append(tr)
             })

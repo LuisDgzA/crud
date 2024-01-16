@@ -116,12 +116,12 @@
     $pdf->Cell(50, 4, 'Presentación', 1, 0, 'L', 0);
 	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
     $pdf->Cell(110, 4, $info['presentacion'], 1, 0, 'L', 0);
-    $pdf->Ln();
-    $pdf->setX(25);
-	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
-    $pdf->Cell(50, 4, 'Responsable', 1, 0, 'L', 0);
-	$pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
-    $pdf->Cell(110, 4, $info['responsable'], 1, 0, 'L', 0);
+    // $pdf->Ln();
+    // $pdf->setX(25);
+	// $pdf->SetFont(PDF_FONT_NAME_MAIN, 'B', 10);
+    // $pdf->Cell(50, 4, 'Responsable', 1, 0, 'L', 0);
+	// $pdf->SetFont(PDF_FONT_NAME_MAIN, 'R', 10);
+    // $pdf->Cell(110, 4, $info['responsable'], 1, 0, 'L', 0);
     
     // $pdf->Ln(9);
 

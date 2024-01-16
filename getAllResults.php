@@ -2,7 +2,7 @@
     include("conexion.php");
 
     try {
-        $getResults = "SELECT proveedor_resultado.id, proveedor_resultado.lote, proveedor_analisis.proveedor_id, proveedores.email, proveedores.telefono
+        $getResults = "SELECT proveedor_resultado.id, proveedor_resultado.lote, proveedor_analisis.proveedor_id, proveedores.email, proveedores.telefono, proveedor_resultado.responsable
                         FROM `proveedor_resultado`
                         INNER JOIN proveedor_analisis ON proveedor_analisis.id = proveedor_resultado.proveedor_analisis_id
                         INNER JOIN proveedores ON proveedores.id = proveedor_analisis.proveedor_id
